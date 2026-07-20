@@ -14,6 +14,15 @@ module storage 'modules/storage.bicep' = {
     }
 }
 
+module keyvault 'modules/keyvault.bicep' = {
+  name: 'keyvault-deployment'
+  params: {
+    location: location
+  }
+}
+
 output workloadSubnetId string = network.outputs.workloadSubnetId
 output endpointsSubnetId string = network.outputs.endpointsSubnetId
 output storageAccountName string = storage.outputs.storageAccountName
+output keyVaultName string = keyvault.outputs.keyVaultName
+output keyVaultId string = keyvault.outputs.keyVaultId
