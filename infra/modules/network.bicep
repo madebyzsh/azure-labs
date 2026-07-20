@@ -1,7 +1,8 @@
+param environment string
 param location string
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
-  name: 'nsg-workload'
+  name: 'nsg-${environment}-workload'
   location: location
   properties: {
     securityRules: [
@@ -23,7 +24,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
 }
 
 resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
-  name: 'vnet-lab'
+  name: 'vnet-${environment}'
   location: location
   properties: {
     addressSpace: {
@@ -51,7 +52,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   }
 }
 
-// Outputs = values this module hands back to whoever called it
 resource workloadSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
   parent: vnet
   name: 'snet-workload'
@@ -62,6 +62,7 @@ resource endpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' 
   name: 'snet-endpoints'
 }
 
+// Outputs = values this module hands back to whoever called it
 output workloadSubnetId string = workloadSubnet.id
 output endpointsSubnetId string = endpointsSubnet.id
 output vnetId string = vnet.id

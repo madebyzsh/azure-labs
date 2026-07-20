@@ -1,17 +1,24 @@
+@description('Deployment environment. Drives resource naming.')
+@allowed([
+  'dev'
+  'prod'
+])
+param environment string = 'dev'
 param location string = resourceGroup().location
 
 module network 'modules/network.bicep' = {
-    name: 'network-deployment'
-    params: {
-        location: location
+  name: 'network-deployment'
+  params: {
+    location: location
+    environment: environment
   }
 }
 
 module storage 'modules/storage.bicep' = {
-    name: 'storage-deployment'
-    params: {
-        location: location
-    }
+  name: 'storage-deployment'
+  params: {
+      location: location
+  }
 }
 
 module keyvault 'modules/keyvault.bicep' = {
