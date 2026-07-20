@@ -6,3 +6,6 @@ module network 'modules/network.bicep' = {
     location: location
   }
 }
+
+output workloadSubnetId string = network.outputs.workloadSubnetId
+output endpointsSubnetId string = network.outputs.endpointsSubnetId

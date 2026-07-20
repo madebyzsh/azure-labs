@@ -52,6 +52,16 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
 }
 
 // Outputs = values this module hands back to whoever called it
-output workloadSubnetId string = vnet.properties.subnets[0].id
-output endpointsSubnetId string = vnet.properties.subnets[1].id
+resource workloadSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
+  parent: vnet
+  name: 'snet-workload'
+}
+
+resource endpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
+  parent: vnet
+  name: 'snet-endpoints'
+}
+
+output workloadSubnetId string = workloadSubnet.id
+output endpointsSubnetId string = endpointsSubnet.id
 output vnetId string = vnet.id
