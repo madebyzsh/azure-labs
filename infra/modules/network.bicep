@@ -1,9 +1,11 @@
 param environment string
 param location string
+param tags object
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: 'nsg-${environment}-workload'
   location: location
+  tags: tags
   properties: {
     securityRules: [
       {
@@ -26,6 +28,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
 resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: 'vnet-${environment}'
   location: location
+  tags: tags
   properties: {
     addressSpace: {
       addressPrefixes: [

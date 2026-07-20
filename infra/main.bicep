@@ -1,4 +1,9 @@
 @description('Deployment environment. Drives resource naming.')
+param tags object = {
+  environment: environment
+  owner: 'sohaib'
+  managedBy: 'bicep'
+}
 @allowed([
   'dev'
   'prod'
@@ -11,13 +16,15 @@ module network 'modules/network.bicep' = {
   params: {
     location: location
     environment: environment
+    tags: tags
   }
 }
 
 module storage 'modules/storage.bicep' = {
   name: 'storage-deployment'
   params: {
-      location: location
+    location: location
+    tags: tags
   }
 }
 
@@ -25,6 +32,7 @@ module keyvault 'modules/keyvault.bicep' = {
   name: 'keyvault-deployment'
   params: {
     location: location
+    tags: tags
   }
 }
 
