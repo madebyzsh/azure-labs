@@ -1,2 +1,2 @@
 # azure-labs
-Azure Labs testing
+Azure Labs testing w/ bicep
