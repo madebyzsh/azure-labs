@@ -5,7 +5,7 @@ param vnetId string
 param storageAccountId string
 param storageAccountName string
 
-var privateDnsZoneName = 'privatelink.blob.core.windows.net'
+var privateDnsZoneName = 'privatelink.blob.${environment().suffixes.storage}'
 
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-05-01' = {
   name: 'pe-${storageAccountName}-blob'
