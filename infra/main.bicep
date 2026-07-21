@@ -36,8 +36,22 @@ module keyvault 'modules/keyvault.bicep' = {
   }
 }
 
+module privateEndpoint 'modules/privateendpoint.bicep' = {
+  name: 'privateendpoint-deployment'
+  params: {
+    location: location
+    environmentName: environment
+    subnetId: network.outputs.endpointsSubnetId
+    vnetId: network.outputs.vnetId
+    storageAccountId: storage.outputs.storageAccountId
+    storageAccountName: storage.outputs.storageAccountName
+  }
+}
+
 output workloadSubnetId string = network.outputs.workloadSubnetId
 output endpointsSubnetId string = network.outputs.endpointsSubnetId
 output storageAccountName string = storage.outputs.storageAccountName
 output keyVaultName string = keyvault.outputs.keyVaultName
 output keyVaultId string = keyvault.outputs.keyVaultId
+output privateDnsZoneName string = privateEndpoint.outputs.privateDnsZoneName
+output privateEndpointName string = privateEndpoint.outputs.privateEndpointName
