@@ -1,2 +1,2 @@
 # azure-labs
-Azure Labs testing w/ bicep
+Azure Labs testing w/ bicep & terraform
