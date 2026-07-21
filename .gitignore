@@ -1,0 +1,5 @@
+*.json
+!*.bicepparam
+.terraform/
+*.tfstate
+*.tfstate.*
