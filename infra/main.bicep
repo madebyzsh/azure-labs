@@ -11,12 +11,16 @@ param tags object = {
 param environment string = 'dev'
 param location string = resourceGroup().location
 
+@description('Source IP allowed to SSH. Changes when Cloud Shell restarts.')
+param allowedSshSourceIp string
+
 module network 'modules/network.bicep' = {
   name: 'network-deployment'
   params: {
     location: location
     environment: environment
     tags: tags
+    allowedSshSourceIp: allowedSshSourceIp
   }
 }
 

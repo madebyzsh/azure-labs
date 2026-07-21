@@ -2,6 +2,9 @@ param environment string
 param location string
 param tags object
 
+@description('Source IP allowed to SSH to the workload subnet. Test scaffolding.')
+param allowedSshSourceIp string
+
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: 'nsg-${environment}-workload'
   location: location
@@ -19,6 +22,19 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
           sourcePortRange: '*'
           destinationAddressPrefix: '*'
           destinationPortRange: '*'
+        }
+      }
+      {
+        name: 'allow-ssh-from-shell'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourceAddressPrefix: allowedSshSourceIp
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '22'
         }
       }
     ]
