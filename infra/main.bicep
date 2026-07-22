@@ -52,6 +52,17 @@ module privateEndpoint 'modules/privateendpoint.bicep' = {
   }
 }
 
+module aks 'modules/aks.bicep' = {
+  name: 'aks-deployment'
+  params: {
+    location: location
+    environmentName: environment
+    tags: tags
+    vnetName: network.outputs.vnetName
+    aksSubnetName: network.outputs.aksSubnetName
+  }
+}
+
 output workloadSubnetId string = network.outputs.workloadSubnetId
 output endpointsSubnetId string = network.outputs.endpointsSubnetId
 output storageAccountName string = storage.outputs.storageAccountName
@@ -59,3 +70,5 @@ output keyVaultName string = keyvault.outputs.keyVaultName
 output keyVaultId string = keyvault.outputs.keyVaultId
 output privateDnsZoneName string = privateEndpoint.outputs.privateDnsZoneName
 output privateEndpointName string = privateEndpoint.outputs.privateEndpointName
+output aksClusterName string = aks.outputs.clusterName
+output aksNodeResourceGroup string = aks.outputs.nodeResourceGroup

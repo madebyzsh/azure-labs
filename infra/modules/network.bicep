@@ -5,6 +5,8 @@ param tags object
 @description('Source IP allowed to SSH to the workload subnet. Test scaffolding.')
 param allowedSshSourceIp string
 
+var aksSubnetName = 'snet-aks'
+
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: 'nsg-${environment}-workload'
   location: location
@@ -67,6 +69,12 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
           addressPrefix: '10.10.2.0/24'
         }
       }
+      {
+        name: aksSubnetName
+        properties: {
+          addressPrefix: '10.10.3.0/24'
+        }
+      }
     ]
   }
 }
@@ -85,3 +93,5 @@ resource endpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' 
 output workloadSubnetId string = workloadSubnet.id
 output endpointsSubnetId string = endpointsSubnet.id
 output vnetId string = vnet.id
+output vnetName string = vnet.name
+output aksSubnetName string = aksSubnetName
