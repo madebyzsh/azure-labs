@@ -41,4 +41,3 @@ spec:
   ports:
     - port: 80           # the Service's port
       targetPort: 8080   # the container's port
-      
