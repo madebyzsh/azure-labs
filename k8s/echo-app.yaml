@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo
+  labels:
+    app: echo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echo          # Deployment finds ITS pods by this label
+  template:              # everything below = the pod blueprint
+    metadata:
+      labels:
+        app: echo        # must match the selector above
+    spec:
+      containers:
+        - name: echo
+          image: mendhak/http-https-echo:31
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HTTP_PORT
+              value: "8080"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo
+spec:
+  type: ClusterIP
+  selector:
+    app: echo            # Service finds pods by THIS label
+  ports:
+    - port: 80           # the Service's port
+      targetPort: 8080   # the container's port
