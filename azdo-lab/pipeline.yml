@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include: [ main ]
+  paths:
+    include: [ azdo-lab/* ]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  serviceConnection: 'sc-azure-lab'
+  resourceGroupName: 'rg-azdo-lab2'
+  templateFile: 'azdo-lab/main.bicep'
+
+stages:
+- stage: Validate
+  displayName: 'Validate - build + what-if'
+  jobs:
+  - job: validate
+    steps:
+    - task: AzureCLI@2
+      displayName: 'az bicep build'
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: az bicep build --file $(templateFile)
+    - task: AzureCLI@2
+      displayName: 'az deployment group what-if'
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az deployment group what-if \
+            --resource-group $(resourceGroupName) \
+            --template-file $(templateFile)
+
+- stage: Deploy
+  displayName: 'Deploy - gated'
+  dependsOn: Validate
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: deploy
+    environment: prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - task: AzureCLI@2
+            displayName: 'az deployment group create'
+            inputs:
+              azureSubscription: $(serviceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(resourceGroupName) \
+                  --template-file $(templateFile)
